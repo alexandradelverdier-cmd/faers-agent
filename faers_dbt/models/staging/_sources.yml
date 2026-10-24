@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: faers_raw
+    database: alexandra-delverdier-perso
+    schema: faers_raw_layer
+    description: "Données brutes FAERS (FDA Adverse Event Reporting System), chargées depuis les fichiers ASCII trimestriels."
+    tables:
+      - name: demo_24q1
+        description: "Un rapport par ligne (primaryid) : patient, dates, pays."
+      - name: drug_24q1
+        description: "Médicaments impliqués dans chaque rapport."
+      - name: reac_24q1
+        description: "Effets indésirables déclarés (Preferred Terms MedDRA)."
+      - name: outc_24q1
+        description: "Issue des cas graves (décès, hospitalisation...)."

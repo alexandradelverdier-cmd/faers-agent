@@ -1,0 +1,6 @@
+.venv/
+logs/
+faers_dbt/target/
+faers_dbt/dbt_packages/
+faers_dbt/logs/
+.env
