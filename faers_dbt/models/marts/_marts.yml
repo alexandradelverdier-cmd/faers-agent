@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: fct_reports
+    description: "Un cas de pharmacovigilance FAERS par ligne (dernière version de chaque caseid). Table centrale : à joindre aux autres tables via primaryid."
+    columns:
+      - name: primaryid
+        description: "Identifiant unique de la version du rapport. Clé de jointure avec fct_report_drugs et fct_report_reactions."
+        tests: [unique, not_null]
+      - name: caseid
+        description: "Identifiant du cas, stable entre les versions."
+        tests: [unique, not_null]
+      - name: event_date
+        description: "Date de survenue de l'effet indésirable. Souvent manquante ou incomplète."
+      - name: fda_received_date
+        description: "Date de réception du rapport par la FDA."
+      - name: sex
+        description: "Sexe du patient : F, M ou UNK (inconnu)."
+      - name: age_years
+        description: "Âge du patient converti en années. NULL si non renseigné."
+      - name: occurrence_country
+        description: "Pays de survenue de l'effet, code ISO à 2 lettres (US, FR, JP...)."
+      - name: reporter_type
+        description: "Type de déclarant : MD (médecin), PH (pharmacien), HP (autre professionnel de santé), CN (consommateur), LW (avocat)."
+      - name: is_serious
+        description: "TRUE si le cas a au moins une issue grave (décès, hospitalisation, mise en jeu du pronostic vital...)."
+      - name: is_death
+        description: "TRUE si le cas a entraîné un décès."
+      - name: is_hospitalization
+        description: "TRUE si le cas a entraîné une hospitalisation."
+      - name: outcomes
+        description: "Liste des issues graves, séparées par des virgules. NULL pour les cas non graves."
+
+  - name: fct_report_drugs
+    description: "Médicaments impliqués dans chaque cas, une ligne par médicament. Un cas a souvent plusieurs médicaments."
+    columns:
+      - name: primaryid
+        description: "Clé de jointure vers fct_reports."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_reports')
+                field: primaryid
+      - name: drug_role
+        description: "Rôle du médicament : primary_suspect (principal suspect), secondary_suspect, concomitant (pris en même temps, non suspecté), interacting. Pour attribuer un effet à un médicament, filtrer en priorité sur primary_suspect."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [primary_suspect, secondary_suspect, concomitant, interacting]
+      - name: drug_name
+        description: "Nom du médicament tel que déclaré, en majuscules (marque ou molécule, orthographe variable)."
+      - name: active_ingredient
+        description: "Principe actif, en majuscules. Plus fiable que drug_name pour regrouper un médicament (ex : ADALIMUMAB)."
+      - name: route
+        description: "Voie d'administration (Oral, Subcutaneous, Intravenous...)."
+
+  - name: fct_report_reactions
+    description: "Effets indésirables déclarés pour chaque cas, une ligne par effet (Preferred Term MedDRA)."
+    columns:
+      - name: primaryid
+        description: "Clé de jointure vers fct_reports."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_reports')
+                field: primaryid
+      - name: reaction_pt
+        description: "Effet indésirable en terme MedDRA (anglais). Attention : certains termes décrivent un mésusage ou un problème produit plutôt qu'un effet clinique (Off label use, Drug ineffective, Product dose omission issue)."
+        tests: [not_null]
