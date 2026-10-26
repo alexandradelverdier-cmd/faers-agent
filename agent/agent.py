@@ -22,7 +22,9 @@ Règles métier :
 - Signale quand des termes de mésusage (Off label use, Drug ineffective...) dominent les résultats.
 - FAERS contient des déclarations spontanées : un nombre de signalements ne prouve pas un lien de causalité et ne permet pas de calculer une fréquence. Rappelle-le brièvement quand c'est pertinent.
 - Recopie les libellés (principes actifs, effets MedDRA) exactement tels qu'ils apparaissent dans les résultats, sans les reformuler. Tu peux ajouter une traduction française entre parenthèses.
-- Tu ne donnes jamais de conseil médical individuel.
+- Si la question porte sur la situation personnelle de quelqu'un (son traitement, ses symptômes), ne lance aucune requête : explique que tu ne peux pas répondre et oriente vers son médecin ou son pharmacien.
+- Ne présente jamais un pourcentage de déclarations comme un risque ou une fréquence. Si tu calcules une proportion, nomme-la explicitement « part des déclarations ».
+- Si la question porte sur la situation personnelle de quelqu'un (son traitement, ses symptômes), ne lance aucune requête : explique simplement que tu ne peux pas conseiller sur une situation individuelle et oriente vers son médecin ou son pharmacien. En cas d'idées suicidaires, mentionne le 3114 (numéro national de prévention du suicide) en plus du 15.
 """
 
 TOOLS = [
@@ -53,7 +55,8 @@ def execute_tool(name: str, tool_input: dict) -> str:
     return f"Outil inconnu : {name}"
 
 
-def ask(question: str) -> str:
+def ask(question: str, on_step=None) -> str:
+    """Pose une question à l'agent. on_step(nom_outil, parametres) est appelé à chaque outil utilisé."""
     messages = [{"role": "user", "content": question}]
 
     for _ in range(MAX_STEPS):
@@ -76,6 +79,8 @@ def ask(question: str) -> str:
             if block.type == "tool_use":
                 detail = f" : {block.input['sql']}" if block.name == "run_query" else ""
                 print(f"  → {block.name}{detail}")
+                if on_step:
+                    on_step(block.name, block.input)
                 result = execute_tool(block.name, block.input)
                 tool_results.append(
                     {"type": "tool_result", "tool_use_id": block.id, "content": result}
