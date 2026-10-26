@@ -1,0 +1,51 @@
+name: Mise à jour des données FAERS
+
+on:
+  # Déclenchement manuel depuis l'onglet Actions de GitHub
+  workflow_dispatch:
+  # Pour une mise à jour automatique le 5 de chaque mois, il suffit de décommenter ces deux lignes :
+  # schedule:
+  #   - cron: "0 6 5 * *"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Se connecter à Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_LOADER_KEY }}
+
+      - name: Charger les nouveaux trimestres
+        run: python ingestion/load_faers.py
+
+      - name: Créer le profil dbt
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          faers_dbt:
+            target: prod
+            outputs:
+              prod:
+                type: bigquery
+                method: oauth
+                project: alexandra-delverdier-perso
+                dataset: faers_dev
+                location: US
+                threads: 4
+          EOF
+
+      - name: Reconstruire et tester les tables
+        working-directory: faers_dbt
+        run: dbt build

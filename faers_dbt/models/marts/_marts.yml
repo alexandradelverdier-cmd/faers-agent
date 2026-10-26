@@ -10,6 +10,8 @@ models:
       - name: caseid
         description: "Identifiant du cas, stable entre les versions."
         tests: [unique, not_null]
+      - name: source_quarter
+        description: "Trimestre de publication FAERS de la dernière version du cas, au format AAAA-Qn (ex : 2024-Q1). À utiliser pour les analyses d'évolution dans le temps."
       - name: event_date
         description: "Date de survenue de l'effet indésirable. Souvent manquante ou incomplète."
       - name: fda_received_date

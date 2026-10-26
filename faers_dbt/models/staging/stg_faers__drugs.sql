@@ -11,4 +11,4 @@ select
     upper(nullif(trim(drugname), ''))              as drug_name,
     upper(nullif(trim(prod_ai), ''))               as active_ingredient,
     nullif(trim(route), '')                        as route
-from {{ source('faers_raw', 'drug_24q1') }}
+from {{ source('faers_raw', 'drug') }}

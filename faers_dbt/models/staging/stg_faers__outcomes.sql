@@ -10,4 +10,4 @@ select
         when 'RI' then 'required_intervention'
         when 'OT' then 'other_serious'
     end                                            as outcome
-from {{ source('faers_raw', 'outc_24q1') }}
+from {{ source('faers_raw', 'outc') }}

@@ -3,15 +3,23 @@ from google.cloud import bigquery
 PROJECT = "alexandra-delverdier-perso"
 DATASET = "faers_dev"
 TABLES = ["fct_reports", "fct_report_drugs", "fct_report_reactions"]
-MAX_BYTES = 1_000_000_000  # plafond de 1 Go scanné par requête
+MAX_BYTES = 5_000_000_000  # plafond de 5 Go scanné par requête
 MAX_ROWS = 50              # nombre max de lignes renvoyées à l'agent
 
 client = bigquery.Client(project=PROJECT)
 
 
+def get_coverage() -> dict:
+    """Premier et dernier trimestre présents dans les données."""
+    sql = f"SELECT MIN(source_quarter) AS debut, MAX(source_quarter) AS fin FROM `{PROJECT}.{DATASET}.fct_reports`"
+    row = list(client.query(sql).result())[0]
+    return {"debut": row.debut, "fin": row.fin}
+
+
 def get_schema() -> str:
-    """Décrit les tables, colonnes et descriptions dbt."""
-    lines = []
+    """Décrit la période couverte, les tables, colonnes et descriptions dbt."""
+    coverage = get_coverage()
+    lines = [f"Période couverte par les données : de {coverage['debut']} à {coverage['fin']}.", ""]
     for name in TABLES:
         table = client.get_table(f"{PROJECT}.{DATASET}.{name}")
         lines.append(f"## `{PROJECT}.{DATASET}.{name}` ({table.num_rows} lignes)")
@@ -43,8 +51,3 @@ def run_query(sql: str) -> str:
 
 if __name__ == "__main__":
     print(get_schema())
-    print(run_query(
-        "SELECT drug_role, COUNT(*) AS nb "
-        "FROM `alexandra-delverdier-perso.faers_dev.fct_report_drugs` "
-        "GROUP BY drug_role ORDER BY nb DESC"
-    ))

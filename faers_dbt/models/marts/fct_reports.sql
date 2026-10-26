@@ -1,9 +1,15 @@
+{{ config(
+    partition_by={"field": "fda_received_date", "data_type": "date", "granularity": "month"},
+    cluster_by=["occurrence_country"]
+) }}
+
 with latest_reports as (
     select *
     from {{ ref('stg_faers__reports') }}
+    where caseid not in (select caseid from {{ ref('stg_faers__deleted_cases') }})
     qualify row_number() over (
         partition by caseid
-        order by case_version desc, fda_received_date desc
+        order by case_version desc, fda_received_date desc, source_quarter desc
     ) = 1
 ),
 
@@ -21,6 +27,7 @@ select
     r.primaryid,
     r.caseid,
     r.case_version,
+    r.source_quarter,
     r.event_date,
     r.fda_received_date,
     r.sex,

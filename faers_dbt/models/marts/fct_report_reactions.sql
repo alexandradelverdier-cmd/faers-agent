@@ -1,3 +1,5 @@
+{{ config(cluster_by=["reaction_pt"]) }}
+
 select distinct
     re.primaryid,
     re.caseid,

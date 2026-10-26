@@ -1,3 +1,5 @@
+{{ config(cluster_by=["active_ingredient", "drug_role"]) }}
+
 select
     d.primaryid,
     d.caseid,
