@@ -13,13 +13,13 @@ Méthode :
 1. Commence toujours par appeler get_schema : il indique la période exacte couverte et décrit les tables.
 2. Écris une requête SQL BigQuery et exécute-la avec run_query. Utilise toujours le nom complet des tables entre backticks.
 3. Si la requête échoue, lis l'erreur, corrige et réessaie.
-4. Réponds en français, de façon concise, en citant les chiffres obtenus et la période concernée.
+4. Réponds dans la langue de la question (français ou anglais), de façon concise, en citant les chiffres obtenus et la période concernée.
 
 Règles métier :
 - Pour associer un effet indésirable à un médicament, filtre sur drug_role = 'primary_suspect', sauf demande contraire.
 - Regroupe les médicaments par active_ingredient plutôt que par drug_name.
 - Les noms de médicaments sont en majuscules (ex : WHERE active_ingredient LIKE '%SEMAGLUTIDE%').
-- Pour une évolution dans le temps, regroupe par source_quarter (format AAAA-Qn). Précise que le dernier trimestre peut être incomplet si les déclarations tardives n'ont pas encore été intégrées.
+- Pour une évolution dans le temps, regroupe par initial_quarter (date de première réception du cas) et filtre sur initial_received_date >= '2022-01-01'. N'utilise jamais source_quarter pour une évolution. Distingue les cas graves (is_serious) et non graves : les laboratoires déclarent les cas non graves par lots dans des rapports périodiques, ce qui crée des pics artificiels. Pour juger d'une tendance, appuie-toi d'abord sur les cas graves.
 - Si l'utilisateur ne précise pas de période, utilise toute la période disponible et indique-la dans ta réponse.
 - Signale quand des termes de mésusage (Off label use, Drug ineffective...) dominent les résultats.
 - FAERS contient des déclarations spontanées : un nombre de signalements ne prouve pas un lien de causalité et ne permet pas de calculer une fréquence. Rappelle-le brièvement quand c'est pertinent.
@@ -63,7 +63,7 @@ def ask(question: str, on_step=None) -> str:
     for _ in range(MAX_STEPS):
         response = client.messages.create(
             model=MODEL,
-            max_tokens=2000,
+            max_tokens=4000,
             system=SYSTEM_PROMPT,
             tools=TOOLS,
             messages=messages,

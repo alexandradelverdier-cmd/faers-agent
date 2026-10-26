@@ -4,6 +4,7 @@ select
     safe_cast(caseversion as int64)                as case_version,
     concat('20', substr(_table_suffix, 1, 2), '-Q', substr(_table_suffix, 4, 1)) as source_quarter,
     safe.parse_date('%Y%m%d', event_dt)            as event_date,
+    safe.parse_date('%Y%m%d', init_fda_dt)         as initial_received_date,
     safe.parse_date('%Y%m%d', fda_dt)              as fda_received_date,
     nullif(trim(sex), '')                          as sex,
     case nullif(age_cod, '')

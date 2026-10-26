@@ -19,8 +19,8 @@ COLUMNS = {
     "drug": ["primaryid", "caseid", "drug_seq", "role_cod", "drugname", "prod_ai", "route"],
     "reac": ["primaryid", "caseid", "pt"],
     "outc": ["primaryid", "caseid", "outc_cod"],
-    "demo": ["primaryid", "caseid", "caseversion", "event_dt", "fda_dt", "sex",
-             "age", "age_cod", "occr_country", "occp_cod"],
+    "demo": ["primaryid", "caseid", "caseversion", "event_dt", "init_fda_dt", "fda_dt",
+             "sex", "age", "age_cod", "occr_country", "occp_cod"],
 }
 
 client = bigquery.Client(project=PROJECT)

@@ -1,5 +1,5 @@
 {{ config(
-    partition_by={"field": "fda_received_date", "data_type": "date", "granularity": "month"},
+    partition_by={"field": "initial_received_date", "data_type": "date", "granularity": "month"},
     cluster_by=["occurrence_country"]
 ) }}
 
@@ -27,6 +27,8 @@ select
     r.primaryid,
     r.caseid,
     r.case_version,
+    r.initial_received_date,
+    format_date('%Y-Q%Q', r.initial_received_date)  as initial_quarter,
     r.source_quarter,
     r.event_date,
     r.fda_received_date,

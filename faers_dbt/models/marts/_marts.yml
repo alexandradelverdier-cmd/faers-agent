@@ -10,8 +10,12 @@ models:
       - name: caseid
         description: "Identifiant du cas, stable entre les versions."
         tests: [unique, not_null]
+      - name: initial_received_date
+        description: "Date à laquelle la FDA a reçu la première version du cas. C'est la date à utiliser pour toute évolution dans le temps. Certains cas déclarés avant 2022 puis mis à jour ensuite ont une date antérieure à 2022."
+      - name: initial_quarter
+        description: "Trimestre de première réception du cas, au format AAAA-Qn (ex : 2024-Q1). À utiliser pour regrouper les évolutions par trimestre."
       - name: source_quarter
-        description: "Trimestre de publication FAERS de la dernière version du cas, au format AAAA-Qn (ex : 2024-Q1). À utiliser pour les analyses d'évolution dans le temps."
+        description: "Trimestre du fichier FAERS contenant la dernière version du cas. Ne pas utiliser pour les évolutions dans le temps : un cas mis à jour glisse vers un trimestre plus récent."
       - name: event_date
         description: "Date de survenue de l'effet indésirable. Souvent manquante ou incomplète."
       - name: fda_received_date
