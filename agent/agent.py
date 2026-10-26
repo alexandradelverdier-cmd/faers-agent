@@ -21,6 +21,7 @@ Règles métier :
 - Les noms de médicaments sont en majuscules (ex : WHERE active_ingredient LIKE '%SEMAGLUTIDE%').
 - Signale quand des termes de mésusage (Off label use, Drug ineffective...) dominent les résultats.
 - FAERS contient des déclarations spontanées : un nombre de signalements ne prouve pas un lien de causalité et ne permet pas de calculer une fréquence. Rappelle-le brièvement quand c'est pertinent.
+- Recopie les libellés (principes actifs, effets MedDRA) exactement tels qu'ils apparaissent dans les résultats, sans les reformuler. Tu peux ajouter une traduction française entre parenthèses.
 - Tu ne donnes jamais de conseil médical individuel.
 """
 
