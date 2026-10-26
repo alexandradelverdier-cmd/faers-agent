@@ -93,4 +93,4 @@ This code is published for demonstration purposes. All rights reserved: it may n
 
 Interested in building a similar tool on your own data? Get in touch on [LinkedIn](https://linkedin.com/in/alexandra-delverdier-65972b353).
 
-Alexandra Delverdier, healthcare data analysts
+Alexandra Delverdier, healthcare data analyst
