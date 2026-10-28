@@ -93,7 +93,7 @@ with st.sidebar:
     st.header("À propos")
     st.markdown(
         """
-        Projet portfolio d'**Alexandra Delverdier**, data analyst spécialisée en santé.
+        Projet portfolio d'**Alexandra Delverdier**, analytics engineer spécialisée dans les données de santé.
 
         **Comment ça marche**
         1. L'agent lit le schéma des tables et leur documentation métier
