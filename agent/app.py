@@ -1,11 +1,21 @@
+import os
+
 import streamlit as st
+
+# En ligne, la clé API vient des secrets Streamlit. En local, du fichier .env.
+try:
+    os.environ.setdefault("ANTHROPIC_API_KEY", st.secrets["ANTHROPIC_API_KEY"])
+except Exception:
+    pass
+
 from agent import ask
+from tools import DATASET, PROJECT, TABLES, client, get_coverage
 
 MAX_QUESTIONS = 2
 EXAMPLES = [
     "Quels sont les 10 principes actifs les plus souvent suspects principaux dans des cas de décès ?",
-    "Quels sont les 5 effets indésirables les plus déclarés pour le sémaglutide ?",
-    "Quelle proportion des cas est grave ?",
+    "Comment ont évolué les cas graves déclarés avec le sémaglutide depuis 2022 ?",
+    "Quels sont les 5 effets indésirables les plus déclarés pour l'apixaban ?",
 ]
 
 st.set_page_config(page_title="Agent FAERS", page_icon="💊", layout="centered")
@@ -22,7 +32,6 @@ st.markdown(
     .stMarkdown p, .stMarkdown li { font-size: 1.12rem; line-height: 1.65; }
     [data-testid="stToolbar"] { display: none; }
 
-    /* Bandeau d'en-tête */
     .hero {
         background: linear-gradient(135deg, #0F766E 0%, #14B8A6 100%);
         color: white; padding: 2.2rem 2rem; border-radius: 18px;
@@ -36,7 +45,6 @@ st.markdown(
     .hero-title { font-size: 2.4rem; font-weight: 700; margin: 0.6rem 0 0.4rem 0; line-height: 1.2; }
     .hero-text { font-size: 1.15rem; color: #E6FFFB; line-height: 1.6; }
 
-    /* Chiffres clés */
     .stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
     .stat {
         flex: 1; min-width: 150px; background: #F0FDFA; border: 1px solid #CCFBF1;
@@ -45,7 +53,6 @@ st.markdown(
     .stat b { display: block; font-size: 1.6rem; color: #0F766E; }
     .stat span { font-size: 0.95rem; color: #475569; }
 
-    /* Zone de question */
     [data-testid="stForm"] {
         border: 1px solid #CCFBF1; border-radius: 16px; padding: 1.2rem;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
@@ -55,7 +62,6 @@ st.markdown(
     .stFormSubmitButton button { padding: 0.6rem 1.6rem; border-radius: 10px; }
     .stFormSubmitButton button p { font-size: 1.05rem !important; font-weight: 600; }
 
-    /* Exemples cliquables */
     div.stButton > button {
         width: 100%; justify-content: flex-start; text-align: left;
         border-radius: 12px; border: 1px solid #99F6E4; background: #F0FDFA;
@@ -67,6 +73,21 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+@st.cache_data(ttl=86400)
+def load_stats():
+    """Période couverte et nombre de lignes, recalculés au plus une fois par jour."""
+    coverage = get_coverage()
+    counts = {name: client.get_table(f"{PROJECT}.{DATASET}.{name}").num_rows for name in TABLES}
+    return coverage, counts
+
+
+def millions(n: int) -> str:
+    return f"{n / 1_000_000:.1f} M".replace(".", ",")
+
+
+coverage, counts = load_stats()
 
 with st.sidebar:
     st.header("À propos")
@@ -86,17 +107,18 @@ with st.sidebar:
     )
 
 st.markdown(
-    """
+    f"""
     <div class="hero">
-        <div class="hero-badge">FDA · FAERS · 1ER TRIMESTRE 2024</div>
+        <div class="hero-badge">FDA · FAERS · {coverage['debut']} À {coverage['fin']}</div>
         <div class="hero-title">💊 Agent de pharmacovigilance</div>
-        <div class="hero-text">Posez une question en français sur les déclarations d'effets indésirables.
-        L'agent écrit la requête SQL, l'exécute et interprète le résultat.</div>
+        <div class="hero-text">Posez une question en français ou en anglais sur les déclarations d'effets indésirables.
+        L'agent écrit la requête SQL, l'exécute et interprète le résultat.
+        Outil d'exploration destiné aux professionnels de santé.</div>
     </div>
     <div class="stats">
-        <div class="stat"><b>406 184</b><span>cas déclarés</span></div>
-        <div class="stat"><b>1,9 M</b><span>lignes médicaments</span></div>
-        <div class="stat"><b>1,4 M</b><span>effets indésirables</span></div>
+        <div class="stat"><b>{millions(counts['fct_reports'])}</b><span>cas uniques</span></div>
+        <div class="stat"><b>{millions(counts['fct_report_drugs'])}</b><span>lignes médicaments</span></div>
+        <div class="stat"><b>{millions(counts['fct_report_reactions'])}</b><span>effets indésirables</span></div>
     </div>
     """,
     unsafe_allow_html=True,

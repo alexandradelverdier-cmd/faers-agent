@@ -6,7 +6,20 @@ TABLES = ["fct_reports", "fct_report_drugs", "fct_report_reactions"]
 MAX_BYTES = 5_000_000_000  # plafond de 5 Go scanné par requête
 MAX_ROWS = 50              # nombre max de lignes renvoyées à l'agent
 
-client = bigquery.Client(project=PROJECT)
+
+def make_client() -> bigquery.Client:
+    """En ligne : le compte de service stocké dans les secrets Streamlit. En local : ton compte Google."""
+    try:
+        import streamlit as st
+        from google.oauth2 import service_account
+        info = dict(st.secrets["gcp_service_account"])
+        credentials = service_account.Credentials.from_service_account_info(info)
+        return bigquery.Client(project=PROJECT, credentials=credentials)
+    except Exception:
+        return bigquery.Client(project=PROJECT)
+
+
+client = make_client()
 
 
 def get_coverage() -> dict:
