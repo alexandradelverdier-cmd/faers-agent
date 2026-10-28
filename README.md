@@ -14,7 +14,9 @@ My background as a nurse helped at every step. I know the questions healthcare p
 
 ## Who it's for
 
-Community and hospital pharmacists, pharmacovigilance teams, medical and regulatory affairs teams in pharma companies, pharmacy students. The tool is not designed for patients and gives no medical advice.
+People who need quick, flexible answers from pharmacovigilance data without writing SQL: medical affairs and regulatory teams, pharmacovigilance analysts, pharmacy students, researchers and small teams without specialised safety software. It is not designed for patients and gives no medical advice.
+
+Tools already exist: the FDA offers a public FAERS dashboard, and large safety teams use dedicated signal detection software. This project explores something different: answering free-form questions in plain language, with every figure backed by a visible SQL query and pharmacovigilance rules built into the agent. The same approach can be applied to an internal safety database.
 
 ## Why not just ask ChatGPT?
 
