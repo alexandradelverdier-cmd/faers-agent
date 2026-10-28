@@ -2,7 +2,7 @@
 
 An AI agent that answers questions about adverse drug event reports received by the FDA. You ask a question in English or French, the agent writes the SQL query, runs it on BigQuery and explains the result.
 
-Demo: [link]
+**Live demo:** [faers-agent.streamlit.app](https://faers-agent.streamlit.app)
 
 ## Why I built this
 
