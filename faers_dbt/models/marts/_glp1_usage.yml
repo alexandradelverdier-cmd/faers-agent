@@ -23,3 +23,32 @@ models:
       - name: nb_reports
         tests:
           - not_null
+
+  - name: fct_glp1__monthly_event_rates
+    description: >
+      Taux mensuel de déclarations par groupe clinique, pour 1 000 déclarations GLP-1
+      du mois. Sert d'entrée au modèle de détection d'anomalies (BigQuery ML).
+    columns:
+      - name: group_month_id
+        tests:
+          - unique
+          - not_null
+      - name: rate_per_1000
+        tests:
+          - not_null
+
+  - name: fct_glp1__anomaly_alerts
+    description: >
+      Veille automatique des déclarations GLP-1. Un modèle ARIMA_PLUS (BigQuery ML),
+      réentraîné à chaque build sur tout l'historique sauf les 6 derniers mois,
+      signale les hausses inhabituelles du taux de déclarations par groupe clinique.
+      Validé a posteriori sur deux alertes réelles : suicidalité (revue EMA, juillet 2023)
+      et neuropathie optique (étude JAMA Ophthalmology, juillet 2024).
+    columns:
+      - name: group_month_id
+        tests:
+          - unique
+          - not_null
+      - name: is_alert
+        tests:
+          - not_null
