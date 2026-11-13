@@ -1,22 +1,26 @@
 {{ config(materialized='table') }}
 
--- ROR par groupe clinique (plusieurs termes MedDRA regroupés)
--- grain : une molécule (ou glp1_all) x un groupe clinique
+-- ROR par groupe clinique, avec analyse de sensibilité
+-- grain : une analyse x une molécule (ou glp1_all) x un groupe clinique
+-- analysis = all_suspect (suspect principal ou secondaire) ou primary_suspect (suspect principal seul)
 
-with glp1 as (
+with glp1_lines as (
 
-    select primaryid, substance
+    select primaryid, substance, is_suspect, is_primary_suspect
     from {{ ref('int_glp1__report_substance') }}
-    where is_suspect
-      and (has_single_agent or has_compounded)
+    where has_single_agent or has_compounded
 
 ),
 
 exposed as (
 
-    select primaryid, substance as drug from glp1
+    select 'all_suspect' as analysis, primaryid, substance as drug from glp1_lines where is_suspect
     union distinct
-    select primaryid, 'glp1_all' as drug from glp1
+    select 'all_suspect', primaryid, 'glp1_all' from glp1_lines where is_suspect
+    union distinct
+    select 'primary_suspect', primaryid, substance from glp1_lines where is_primary_suspect
+    union distinct
+    select 'primary_suspect', primaryid, 'glp1_all' from glp1_lines where is_primary_suspect
 
 ),
 
@@ -26,14 +30,21 @@ any_glp1 as (
 
 ),
 
-comparator as (
+comparator_lines as (
 
-    select distinct c.primaryid
+    select c.primaryid, c.is_suspect, c.is_primary_suspect
     from {{ ref('int_comparator__report_substance') }} as c
     left join any_glp1 as g
         on c.primaryid = g.primaryid
-    where c.is_suspect
-      and g.primaryid is null
+    where g.primaryid is null
+
+),
+
+comparator as (
+
+    select distinct 'all_suspect' as analysis, primaryid from comparator_lines where is_suspect
+    union distinct
+    select distinct 'primary_suspect', primaryid from comparator_lines where is_primary_suspect
 
 ),
 
@@ -67,41 +78,44 @@ reactions_grouped as (
 
 exposed_totals as (
 
-    select drug, count(distinct primaryid) as n_drug
+    select analysis, drug, count(distinct primaryid) as n_drug
     from exposed
-    group by 1
+    group by 1, 2
 
 ),
 
-comparator_total as (
+comparator_totals as (
 
-    select count(*) as n_comp from comparator
+    select analysis, count(distinct primaryid) as n_comp
+    from comparator
+    group by 1
 
 ),
 
 exposed_events as (
 
-    select e.drug, rg.clinical_group, count(distinct e.primaryid) as a
+    select e.analysis, e.drug, rg.clinical_group, count(distinct e.primaryid) as a
     from exposed as e
     inner join reactions_grouped as rg
         on e.primaryid = rg.primaryid
-    group by 1, 2
+    group by 1, 2, 3
 
 ),
 
 comparator_events as (
 
-    select rg.clinical_group, count(distinct c.primaryid) as c
+    select c.analysis, rg.clinical_group, count(distinct c.primaryid) as c
     from comparator as c
     inner join reactions_grouped as rg
         on c.primaryid = rg.primaryid
-    group by 1
+    group by 1, 2
 
 ),
 
 two_by_two as (
 
     select
+        ee.analysis,
         ee.drug,
         ee.clinical_group,
         ee.a,
@@ -110,10 +124,13 @@ two_by_two as (
         ct.n_comp - coalesce(ce.c, 0) as d
     from exposed_events as ee
     inner join exposed_totals as et
-        on ee.drug = et.drug
-    cross join comparator_total as ct
+        on  ee.analysis = et.analysis
+        and ee.drug     = et.drug
+    inner join comparator_totals as ct
+        on ee.analysis = ct.analysis
     left join comparator_events as ce
-        on ee.clinical_group = ce.clinical_group
+        on  ee.analysis       = ce.analysis
+        and ee.clinical_group = ce.clinical_group
 
 ),
 
@@ -128,6 +145,7 @@ ror_calc as (
 )
 
 select
+    r.analysis,
     r.drug,
     r.clinical_group,
     g.label_fr,
