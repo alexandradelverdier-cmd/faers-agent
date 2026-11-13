@@ -1,0 +1,16 @@
+brand,substance,product_type
+OZEMPIC,semaglutide,single_agent
+WEGOVY,semaglutide,single_agent
+RYBELSUS,semaglutide,single_agent
+VICTOZA,liraglutide,single_agent
+SAXENDA,liraglutide,single_agent
+TRULICITY,dulaglutide,single_agent
+MOUNJARO,tirzepatide,single_agent
+ZEPBOUND,tirzepatide,single_agent
+BYETTA,exenatide,single_agent
+BYDUREON,exenatide,single_agent
+ADLYXIN,lixisenatide,single_agent
+LYXUMIA,lixisenatide,single_agent
+SOLIQUA,lixisenatide,insulin_combination
+SULIQUA,lixisenatide,insulin_combination
+XULTOPHY,liraglutide,insulin_combination
