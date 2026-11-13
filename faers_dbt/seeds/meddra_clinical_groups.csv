@@ -1,9 +1,0 @@
-clinical_group,label_fr,include_regex,exclude_regex
-pancreatitis,Pancréatite,pancreatitis,alcoholic|autoimmune|hereditary|traumatic
-gallbladder,Atteinte de la vésicule biliaire,cholecyst|cholelith|gallbladder|biliary colic,cancer|carcinoma|neoplasm|polyp|mass
-intestinal_obstruction,Occlusion intestinale,\bileus\b|subileus|intestinal obstruction|bowel obstruction,distal intestinal obstruction syndrome|postoperative
-gastroparesis,Gastroparésie,gastroparesis|impaired gastric emptying,postoperative
-optic_neuropathy,Neuropathie optique ischémique,optic ischaemic neuropathy|ischaemic optic neuropathy|optic nerve infarction,
-suicidality,Idées et comportements suicidaires,suicid,
-thyroid_cancer,Cancer de la thyroïde,thyroid cancer|thyroid carcinoma|thyroid neoplasm malignant|medullary thyroid|papillary thyroid|follicular thyroid|anaplastic thyroid,
-pulmonary_aspiration,Inhalation pulmonaire,^aspiration|pneumonia aspiration|pneumonitis aspiration,
