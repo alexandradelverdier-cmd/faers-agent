@@ -1,16 +1,17 @@
-brand,substance,product_type
-OZEMPIC,semaglutide,single_agent
-WEGOVY,semaglutide,single_agent
-RYBELSUS,semaglutide,single_agent
-VICTOZA,liraglutide,single_agent
-SAXENDA,liraglutide,single_agent
-TRULICITY,dulaglutide,single_agent
-MOUNJARO,tirzepatide,single_agent
-ZEPBOUND,tirzepatide,single_agent
-BYETTA,exenatide,single_agent
-BYDUREON,exenatide,single_agent
-ADLYXIN,lixisenatide,single_agent
-LYXUMIA,lixisenatide,single_agent
-SOLIQUA,lixisenatide,insulin_combination
-SULIQUA,lixisenatide,insulin_combination
-XULTOPHY,liraglutide,insulin_combination
+brand,substance,product_type,manufacturer,default_form
+OZEMPIC,semaglutide,single_agent,Novo Nordisk,injectable
+WEGOVY,semaglutide,single_agent,Novo Nordisk,by_route
+RYBELSUS,semaglutide,single_agent,Novo Nordisk,oral
+VICTOZA,liraglutide,single_agent,Novo Nordisk,injectable
+SAXENDA,liraglutide,single_agent,Novo Nordisk,injectable
+TRULICITY,dulaglutide,single_agent,Eli Lilly,injectable
+MOUNJARO,tirzepatide,single_agent,Eli Lilly,injectable
+ZEPBOUND,tirzepatide,single_agent,Eli Lilly,injectable
+FOUNDAYO,orforglipron,single_agent,Eli Lilly,oral
+BYETTA,exenatide,single_agent,AstraZeneca,injectable
+BYDUREON,exenatide,single_agent,AstraZeneca,injectable
+ADLYXIN,lixisenatide,single_agent,Sanofi,injectable
+LYXUMIA,lixisenatide,single_agent,Sanofi,injectable
+SOLIQUA,lixisenatide,insulin_combination,Sanofi,injectable
+SULIQUA,lixisenatide,insulin_combination,Sanofi,injectable
+XULTOPHY,liraglutide,insulin_combination,Novo Nordisk,injectable

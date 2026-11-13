@@ -1,0 +1,37 @@
+reaction_pt,usage_category
+Incorrect dose administered,administration_error
+Extra dose administered,administration_error
+Product dose omission issue,administration_error
+Accidental underdose,administration_error
+Inappropriate schedule of product administration,administration_error
+Wrong technique in product usage process,administration_error
+Accidental overdose,administration_error
+Incorrect dose administered by device,administration_error
+Wrong technique in device usage process,administration_error
+Drug dose omission by device,administration_error
+Underdose,administration_error
+Drug dose titration not performed,administration_error
+Medication error,administration_error
+Incorrect dose administered by product,administration_error
+Product dose omission in error,administration_error
+Product administration error,administration_error
+Product dose confusion,administration_error
+Wrong dose,administration_error
+Circumstance or information capable of leading to medication error,administration_error
+Transcription medication error,administration_error
+Increased dose administered,administration_error
+Dose calculation error,administration_error
+Intercepted product administration error,administration_error
+Wrong technique in product usage process performed in error,administration_error
+Medication error in transfer of care,administration_error
+Drug ineffective,perceived_inefficacy
+Weight loss poor,perceived_inefficacy
+Drug effect less than expected,perceived_inefficacy
+Treatment failure,perceived_inefficacy
+Therapeutic product effect incomplete,perceived_inefficacy
+Therapeutic product effect decreased,perceived_inefficacy
+Drug ineffective for unapproved indication,perceived_inefficacy
+Therapeutic product ineffective,perceived_inefficacy
+Product ineffective,perceived_inefficacy
+Product ineffective for unapproved use,perceived_inefficacy
+Therapeutic product ineffective for unapproved indication,perceived_inefficacy

@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: fct_glp1__usage_issues
+    description: >
+      Erreurs d'administration et inefficacité ressentie déclarées dans FAERS,
+      par marque de GLP-1, forme (injectable ou orale) et trimestre.
+      Rapports dédoublonnés (dernière version par cas), médicament suspect.
+    columns:
+      - name: brand_form_quarter_id
+        description: Clé du grain (marque | forme | trimestre)
+        tests:
+          - unique
+          - not_null
+      - name: brand
+        tests:
+          - not_null
+      - name: dosage_form
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['injectable', 'oral']
+      - name: nb_reports
+        tests:
+          - not_null
