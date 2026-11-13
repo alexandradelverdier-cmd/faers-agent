@@ -96,3 +96,9 @@ This code is published for demonstration purposes. All rights reserved: it may n
 Interested in building a similar tool on your own data? Get in touch on [LinkedIn](https://linkedin.com/in/alexandra-delverdier-65972b353).
 
 Alexandra Delverdier, analytics engineer specialised in healthcare data
+
+## Case study: GLP-1 drugs, from pen to pill
+
+The same dbt pipeline powers an in-depth analysis of GLP-1 receptor agonists (Ozempic, Wegovy, Mounjaro, Zepbound, Foundayo): administration errors and perceived inefficacy by dosage form, disproportionality signals, and a BigQuery ML anomaly detector validated on real safety alerts.
+
+[Read the case study](faers_dbt/docs/glp1_case_study.md)
