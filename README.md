@@ -6,7 +6,7 @@ An AI agent that answers questions on FDA adverse drug event reports. Ask a ques
 
 ## Why I built this
 
-I worked as a nurse for nearly eight years, in hospitals and then in private practice. I often saw pharmacists rely solely on the Vidal (the French drug reference) when looking up information on a drug. Other sources exist, but they are rarely easy to use. Pharmacovigilance moves fast: reports are added, corrected or removed every day, and pharmaceutical companies, pharmacies and care facilities all need easy access to this data.
+I worked as a nurse for nearly eight years, in hospitals and then in private practice. I often saw pharmacists turn first to the Vidal (the French drug reference) when looking up information on a drug. Other sources exist, but they are rarely easy to use. Pharmacovigilance moves fast: reports are added, corrected or removed every day, and pharmaceutical companies, pharmacies and care facilities all need easy access to this data.
 
 Later, while working in medtech, I met many pharmacy professionals who were teaching themselves data skills, since working with this kind of data isn't part of their initial training. I wanted to give them a tool that doesn't require learning SQL.
 
@@ -52,7 +52,7 @@ The agent has two tools: one reads the table documentation (written in dbt and c
 
 ## Challenges I ran into
 
-- **A zigzag curve.** When I plotted semaglutide reports over time, the curve swung up and down from one quarter to the next. My first guess was a date issue: I was counting each case in the quarter of its latest update instead of its first report. I fixed that and reloaded the data, but the curve barely changed. Splitting serious and non-serious cases revealed the real cause: serious cases grow steadily, while non-serious cases jump from a few dozen to several thousand between quarters. Companies must submit serious, unexpected cases quickly, but non-serious cases are often bundled into periodic reports. To assess a trend, you need to look at serious cases first, and the agent now follows that rule.
+- **A zigzag curve.** When I plotted semaglutide reports over time, the curve swung up and down from one quarter to the next. My first guess was a date issue: I was counting each case in the quarter of its latest update instead of its first report. I fixed that and reloaded the data, but the curve barely changed. Splitting serious and non-serious cases revealed the real cause: serious cases grow steadily, while non-serious cases jump from a few dozen to several thousand between quarters. Non-serious cases are often bundled into periodic reports by drug companies. They still matter for a drug's safety profile, but they can create artificial spikes over time, so the agent now separates serious and non-serious cases when describing a trend.
 - **Duplicate versions.** Updated cases reappear in later quarters. Out of 7.6 million raw reports, 1.1 million (about 15%) were older versions or cases withdrawn by the FDA.
 - **Out-of-scope questions.** A public demo can be used by anyone. When asked "Can I stop my sertraline if I feel nauseous?", the agent initially answered with a percentage of reports that a patient could mistake for a risk. It now refuses to run queries for personal medical questions, refers the person to their doctor or pharmacist, and provides the French suicide prevention line (3114) when relevant.
 - **Drug labels.** Combination products are written as `FENTANYL\FENTANYL CITRATE`, and the agent tended to reword them. It now copies labels exactly as they appear.
@@ -72,7 +72,7 @@ The GitHub Actions workflow `update_faers.yml` loads new quarters, rebuilds the 
 ## Limitations
 
 - Reports are spontaneous: the number of reports does not establish causality and cannot be used to calculate incidence or risk. Under-reporting and media attention also skew the numbers.
-- Companies often bundle non-serious cases into periodic reports, which creates artificial spikes. Trends are more reliable when based on serious cases.
+- Companies often bundle non-serious cases into periodic reports, which creates artificial spikes. A spike in reports does not necessarily mean more adverse events.
 - Salt forms are not yet normalized: `SERTRALINE` and `SERTRALINE HYDROCHLORIDE` are counted separately.
 - The MedDRA hierarchy, which would allow grouping effects by organ system, requires a paid license.
 - The agent was evaluated on a small set of questions and can make mistakes, which is why the SQL is always shown.
