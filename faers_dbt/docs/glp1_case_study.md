@@ -23,7 +23,7 @@ Share of adverse event reports (H1 2026) mentioning an administration error or p
 
 The oral forms cut administration errors by 5 to 7, while reports of "drug ineffective" or "weight loss poor" rise sharply. Digestive effects remain (nausea in 20 to 25 % of oral-form reports).
 
-![Pen vs pill](docs/images/glp1_stylo_vs_comprime.png)
+![Pen vs pill](images/glp1_stylo_vs_comprime.png)
 
 ### 2. An anomaly detector validated on real alerts
 
@@ -44,7 +44,7 @@ An ARIMA_PLUS model (BigQuery ML) learns the normal monthly reporting rate for e
 
 In February 2026 the detector flagged gastroparesis (3x the upper bound of the expected rate), the month the Wegovy pill launched in the US. Triage showed the timing was a coincidence: the reports concerned older injectable products, and more than 400 were submitted by lawyers in the context of US litigation. Not a new safety signal, but exactly the kind of alert a human must investigate before drawing conclusions.
 
-![Anomaly detector](docs/images/glp1_detecteur_alerte.png)
+![Anomaly detector](images/glp1_detecteur_alerte.png)
 
 ### 3. Disproportionality signals (ROR, GLP-1 class vs SGLT2 and DPP-4)
 
