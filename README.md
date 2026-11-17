@@ -3,17 +3,18 @@
 An AI agent that answers questions on FDA adverse drug event reports. Ask a question in English or French, and the agent writes the SQL query, runs it on BigQuery and explains the result.
 
 **Live demo:** [faers-agent.streamlit.app](https://faers-agent.streamlit.app)
+
 Each question calls a paid AI model, so the demo is limited to 2 questions per visitor.
 
 <img width="720" height="766" alt="Demo: asking the agent about lithium in patients over 65" src="https://github.com/user-attachments/assets/b5476e75-0485-45c7-a04c-46432ecc4373" />
 
 ## Why I built this
 
-I worked as a nurse for nearly eight years, in hospitals and then in private practice. I often saw pharmacists turn first to the Vidal (the French drug reference) when looking up information on a drug. Other sources exist, but they are rarely easy to use. Pharmacovigilance moves fast: reports are added, corrected or removed every day, and pharmaceutical companies, pharmacies and care facilities all need easy access to this data.
+I was a nurse for eight years, and I still talk regularly with pharmacists. Public pharmacovigilance data exists, and the public dashboards (the FDA FAERS dashboard, adrreports.eu for EudraVigilance, VigiAccess for the WHO database) offer filters. But as soon as you want to cross several criteria, such as age, seriousness and period, you have to export the data and rework it yourself. You can't simply ask your question.
 
-Later, while working in medtech, I met many pharmacy professionals who were teaching themselves data skills, since working with this kind of data isn't part of their initial training. I wanted to give them a tool that doesn't require learning SQL.
+So I built an agent that bridges the gap: you ask a question in plain language, it writes the SQL query, runs it on FDA data and explains the result with pharmacovigilance rules.
 
-My background as a nurse helped at every step. I know the questions healthcare professionals ask, the time pressure they face when making decisions, and what will actually be useful to them. It's also what helped me spot several traps in the data.
+Connecting an AI to a database is the easy part. The hard part was teaching it what it must not say: no causality, no risk estimate, and no answer to a patient asking about their own treatment. That's where my clinical background made the difference. It also helped me spot several traps in the data.
 
 ## Who it's for
 
@@ -98,7 +99,7 @@ Python, BigQuery, dbt Core, Claude API, Streamlit, GitHub Actions
 
 ## Use and collaboration
 
-This code is published for demonstration purposes. All rights reserved: it may not be reused, copied or adapted without my written permission.
+This code is published for demonstration purposes. All rights reserved: it may not be reused, copied or adapted without my permission.
 
 Interested in building a similar tool on your own data? Get in touch on [LinkedIn](https://linkedin.com/in/alexandra-delverdier-65972b353).
 
