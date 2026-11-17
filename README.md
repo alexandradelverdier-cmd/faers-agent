@@ -3,6 +3,9 @@
 An AI agent that answers questions on FDA adverse drug event reports. Ask a question in English or French, and the agent writes the SQL query, runs it on BigQuery and explains the result.
 
 **Live demo:** [faers-agent.streamlit.app](https://faers-agent.streamlit.app)
+Each question calls a paid AI model, so the demo is limited to 2 questions per visitor.
+
+<img width="720" height="766" alt="Demo: asking the agent about lithium in patients over 65" src="https://github.com/user-attachments/assets/b5476e75-0485-45c7-a04c-46432ecc4373" />
 
 ## Why I built this
 
@@ -16,13 +19,13 @@ My background as a nurse helped at every step. I know the questions healthcare p
 
 People who need quick, flexible answers from pharmacovigilance data without writing SQL queries: medical affairs and regulatory teams, pharmacovigilance analysts, pharmacy students, researchers and small teams without specialised safety software. It is not designed for patients and does not give any medical advice.
 
-Tools already exist: the FDA offers a public FAERS dashboard, and large safety teams use dedicated signal detection software. This project explores something different: answering free-form questions in plain language, with every figure backed by a visible SQL query and pharmacovigilance rules built into the agent. The same approach can be applied to an internal safety database.
+Tools already exist. Public dashboards (the FDA FAERS dashboard, adrreports.eu for EudraVigilance, VigiAccess for the WHO database) offer filters, but as soon as you want to cross several criteria, such as age, seriousness and period, you have to export the data and rework it yourself. Large safety teams use dedicated signal detection software. This project explores something different: answering free-form questions in plain language, with every figure backed by a visible SQL query and pharmacovigilance rules built into the agent. The same approach can be applied to an internal safety database.
 
 ## Why not just ask ChatGPT?
 
 A general chatbot doesn't have FAERS data. Ask it how many deaths were reported with apixaban in 2025, and it will answer from memory, with numbers that may be outdated or made up. The raw files are also far too large to paste into a conversation.
 
-Here, every number comes from a real query on 6.4 million cleaned cases, and the query is always shown, so anyone can check where a result comes from. That matters in a regulated field. Pharmacovigilance rules are built into the agent: it focuses on the primary suspect drug, flags misuse terms and never implies causality.
+Here, every number comes from a real query on 6.4 million cleaned and deduplicated cases, and the query is always shown, so anyone can check where a result comes from. That matters in a regulated field. Pharmacovigilance rules are built into the agent: it focuses on the primary suspect drug, flags misuse terms and never implies causality.
 
 FAERS is just the demo. The same approach works on an internal safety database that can't be shared with a public chatbot.
 
@@ -62,7 +65,7 @@ The agent has two tools: one reads the table documentation (written in dbt and c
 - **Everything is stored as text in the raw layer.** FDA files sometimes change format. Type conversions happen in dbt, so a load doesn't fail because of a badly guessed type.
 - **One table per quarter.** dbt reads them all at once using BigQuery wildcard tables, so new quarters are automatically included without code changes.
 - **Resumable loads.** The main table is loaded last and acts as a marker: an interrupted quarter is simply reloaded.
-- **Zero running cost.** Only the columns I use are loaded, and tables are partitioned and clustered to limit the amount of data scanned.
+- **Zero BigQuery cost.** Only the columns I use are loaded, and tables are partitioned and clustered to limit the amount of data scanned.
 - **Agent evaluation.** A set of questions with known answers, checked against queries I wrote by hand, makes sure the agent's numbers are right.
 
 ## Data updates
@@ -85,6 +88,10 @@ The GitHub Actions workflow `update_faers.yml` loads new quarters, rebuilds the 
 - Extend to medical devices with the MAUDE database
 - Allow follow-up questions in the same conversation
 
+## Related project
+
+[GLP-1: pen vs pill](https://github.com/alexandradelverdier-cmd/glp1): an analysis of GLP-1 adverse event reports built on the same FAERS data, comparing injectable and oral forms, with a time series model that flags unusual reporting spikes.
+
 ## Stack
 
 Python, BigQuery, dbt Core, Claude API, Streamlit, GitHub Actions
@@ -96,4 +103,3 @@ This code is published for demonstration purposes. All rights reserved: it may n
 Interested in building a similar tool on your own data? Get in touch on [LinkedIn](https://linkedin.com/in/alexandra-delverdier-65972b353).
 
 Alexandra Delverdier, analytics engineer specialised in healthcare data
-
