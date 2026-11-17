@@ -20,7 +20,7 @@ Connecting an AI to a database is the easy part. The hard part was teaching it w
 
 People who need quick, flexible answers from pharmacovigilance data without writing SQL queries: medical affairs and regulatory teams, pharmacovigilance analysts, pharmacy students, researchers and small teams without specialised safety software. It is not designed for patients and does not give any medical advice.
 
-Tools already exist. Public dashboards (the FDA FAERS dashboard, adrreports.eu for EudraVigilance, VigiAccess for the WHO database) offer filters, but as soon as you want to cross several criteria, such as age, seriousness and period, you have to export the data and rework it yourself. Large safety teams use dedicated signal detection software. This project explores something different: answering free-form questions in plain language, with every figure backed by a visible SQL query and pharmacovigilance rules built into the agent. The same approach can be applied to an internal safety database.
+Large safety teams use dedicated signal detection software. This project explores something different: answering free-form questions in plain language, with every figure backed by a visible SQL query and pharmacovigilance rules built into the agent. The same approach can be applied to an internal safety database.
 
 ## Why not just ask ChatGPT?
 
